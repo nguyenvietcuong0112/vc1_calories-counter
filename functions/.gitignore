@@ -1,0 +1,15 @@
+# Node.js
+node_modules/
+
+# Firebase
+.firebase/
+firebase-debug.log
+
+# Build output
+lib/
+dist/
+
+# Misc
+.DS_Store
+npm-debug.log
+yarn-error.log
