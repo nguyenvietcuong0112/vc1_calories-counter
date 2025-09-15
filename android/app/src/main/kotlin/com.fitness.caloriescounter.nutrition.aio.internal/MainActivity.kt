@@ -1,4 +1,4 @@
-package com.fitness.caloriescounter.nutrition.aio.internal
+package com.fitness.calories.counter.nutrition.aio
 
 import io.flutter.embedding.android.FlutterActivity
 

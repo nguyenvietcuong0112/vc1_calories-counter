@@ -18,6 +18,7 @@ class _MealPlanPageState extends State<MealPlanPage> {
   final _daysController = TextEditingController();
   Map<String, dynamic> _mealPlan = {};
   bool _isLoading = false;
+  String _errorMessage = '';
   late final AiApiService _aiApiService;
   final String _userId = 'test_user';
 
@@ -25,7 +26,7 @@ class _MealPlanPageState extends State<MealPlanPage> {
   void initState() {
     super.initState();
     final generativeModel = FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
-        .generativeModel(model: 'gemini-1.5-flash');
+        .generativeModel(model: 'gemini-2.5-flash');
     _aiApiService = AiApiService(generativeModel);
   }
 
@@ -34,6 +35,7 @@ class _MealPlanPageState extends State<MealPlanPage> {
       setState(() {
         _isLoading = true;
         _mealPlan = {};
+        _errorMessage = '';
       });
 
       try {
@@ -44,25 +46,31 @@ class _MealPlanPageState extends State<MealPlanPage> {
             userProfile,
             int.parse(_daysController.text),
           );
-          setState(() {
-            _mealPlan = json.decode(result);
-            _isLoading = false;
-          });
+
+          // Attempt to decode the JSON, but handle errors gracefully
+          try {
+            setState(() {
+              _mealPlan = json.decode(result);
+              _isLoading = false;
+            });
+          } catch (e) {
+            // If decoding fails, it means the result was not valid JSON (likely an error message)
+            setState(() {
+              _errorMessage = 'Could not process the meal plan. The AI service returned an unexpected response: $result';
+              _isLoading = false;
+            });
+          }
         } else {
           setState(() {
             _isLoading = false;
+            _errorMessage = 'Please save your profile first on the Home page.';
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please save your profile first on the Home page.')),
-          );
         }
       } catch (e) {
         setState(() {
           _isLoading = false;
+          _errorMessage = 'An error occurred: $e';
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
       }
     }
   }
@@ -98,8 +106,16 @@ class _MealPlanPageState extends State<MealPlanPage> {
             const SizedBox(height: 24),
             if (_isLoading)
               const Center(child: CircularProgressIndicator())
+            else if (_errorMessage.isNotEmpty)
+              Center(
+                child: Text(
+                  _errorMessage,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  textAlign: TextAlign.center,
+                ),
+              )
             else if (_mealPlan.isNotEmpty)
-              _buildMealPlanDisplay()
+                _buildMealPlanDisplay()
           ],
         ),
       ),

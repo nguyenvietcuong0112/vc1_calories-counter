@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "68464321257",
+    "project_id": "fitness-nutrition-ai",
+    "storage_bucket": "fitness-nutrition-ai.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68464321257:android:416dfecfe08f5137848678",
+        "android_client_info": {
+          "package_name": "com.fitness.calories.counter.nutrition.aio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq1nMA2cRnP2PmzLhm_Key5AWP0I-hpa8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
